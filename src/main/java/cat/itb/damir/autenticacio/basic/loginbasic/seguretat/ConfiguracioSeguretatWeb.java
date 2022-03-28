@@ -21,24 +21,24 @@ public class ConfiguracioSeguretatWeb extends WebSecurityConfigurerAdapter {
     private final ElMeuUserDetailsService elmeuUserDetailsService;
     private final PasswordEncoder xifrat;
 
-//Per fer proves al principi, per poder fer post i put d'usuaris sense seguretat
-//    @Override
-//    public void configure(WebSecurity web) {
-//        web.ignoring().anyRequest();
-//    }
+/*//Per fer proves al principi, per poder fer post i put d'usuaris sense seguretat
+    @Override
+    public void configure(WebSecurity web) {
+        web.ignoring().anyRequest();
+    }*/
 
 
 
-//codi per fer una prova autenticant en memòria "inMemoryAuthentication()"
-//    @Override
-//    protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-//        auth
-//                .inMemoryAuthentication()
-//                .passwordEncoder(xifrat)
-//                .withUser("Montse")
-//                .password(xifrat.encode("secret"))
-//                .roles("ADMIN"); // és necessari posar tots els camps, fins el rol (authorities)
-//    }
+/*//codi per fer una prova autenticant en memòria "inMemoryAuthentication()"
+    @Override
+    protected void configure(AuthenticationManagerBuilder auth) throws Exception {
+        auth
+                .inMemoryAuthentication()
+                .passwordEncoder(xifrat)
+                .withUser("Montse")
+                .password(xifrat.encode("secret"))
+                .roles("ADMIN"); // és necessari posar tots els camps, fins el rol (authorities)
+    }*/
 
 
 
@@ -47,6 +47,7 @@ public class ConfiguracioSeguretatWeb extends WebSecurityConfigurerAdapter {
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
         auth.userDetailsService(elmeuUserDetailsService).passwordEncoder(xifrat);
     }
+
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
@@ -57,15 +58,14 @@ public class ConfiguracioSeguretatWeb extends WebSecurityConfigurerAdapter {
                 .and()
                 .authorizeRequests()
                 .antMatchers(HttpMethod.GET, "/me/**").hasRole("ADMIN") //per fer proves del forbidden
-                .antMatchers(HttpMethod.GET, "/users/**", "/videojocs/**").hasRole("USER")
-                .antMatchers(HttpMethod.POST, "/users/**", "/videojocs/**").hasRole("USER")
+                .antMatchers(HttpMethod.GET, "/usuaris/**", "/videojocs/**").hasRole("USER")
+                .antMatchers(HttpMethod.POST, "/usuaris/**", "/videojocs/**").hasRole("USER")
                 .antMatchers(HttpMethod.PUT, "/videojocs/**").hasRole("USER")
                 .antMatchers(HttpMethod.DELETE, "/videojocs/**").hasRole("ADMIN")
                 .antMatchers(HttpMethod.POST, "/videojocs/**").hasAnyRole("USER", "ADMIN")
                 .anyRequest().authenticated();
-               // .and()
-               // .csrf().disable();
+        // .and()
+        // .csrf().disable();
     }
-
 }
 
